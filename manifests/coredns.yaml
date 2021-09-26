@@ -53,7 +53,7 @@ metadata:
   namespace: kube-system
 data:
   Corefile: |
-    .:53 {
+    .:1053 {
         errors
         health
         ready
@@ -98,24 +98,18 @@ spec:
     spec:
       priorityClassName: "system-cluster-critical"
       serviceAccountName: coredns
-      tolerations:
-        - key: "CriticalAddonsOnly"
-          operator: "Exists"
-        - key: "node-role.kubernetes.io/control-plane"
-          operator: "Exists"
-          effect: "NoSchedule"
-        - key: "node-role.kubernetes.io/master"
-          operator: "Exists"
-          effect: "NoSchedule"
       nodeSelector:
         beta.kubernetes.io/os: linux
+      imagePullSecrets:
+        - name: vplatfor-pull-secret
       containers:
       - name: coredns
-        image: %{SYSTEM_DEFAULT_REGISTRY}%rancher/mirrored-coredns-coredns:1.8.4
+        image: registry.ford.com/vcluster/upstream-coredns:1.8.4
         imagePullPolicy: IfNotPresent
         resources:
           limits:
             memory: 170Mi
+            cpu: 100m
           requests:
             cpu: 100m
             memory: 70Mi
@@ -125,23 +119,15 @@ spec:
           mountPath: /etc/coredns
           readOnly: true
         ports:
-        - containerPort: 53
+        - containerPort: 1053
           name: dns
           protocol: UDP
-        - containerPort: 53
+        - containerPort: 1053
           name: dns-tcp
           protocol: TCP
         - containerPort: 9153
           name: metrics
           protocol: TCP
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            add:
-            - NET_BIND_SERVICE
-            drop:
-            - all
-          readOnlyRootFilesystem: true
         livenessProbe:
           httpGet:
             path: /health
@@ -192,9 +178,11 @@ spec:
   ports:
   - name: dns
     port: 53
+    targetPort: 1053
     protocol: UDP
   - name: dns-tcp
     port: 53
+    targetPort: 1053
     protocol: TCP
   - name: metrics
     port: 9153
