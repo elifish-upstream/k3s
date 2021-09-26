@@ -98,10 +98,23 @@ spec:
     spec:
       priorityClassName: "system-cluster-critical"
       serviceAccountName: coredns
+      affinity:
+        podAffinity:
+         requiredDuringSchedulingIgnoredDuringExecution:
+         - labelSelector:
+            matchExpressions:
+            - key: app
+              operator: In
+              values:
+              - vcluster
+           topologyKey: kubernetes.io/hostname
       nodeSelector:
         beta.kubernetes.io/os: linux
       imagePullSecrets:
         - name: vplatfor-pull-secret
+      securityContext:
+        runAsUser: 1012960000
+        fsGroup: 1012960000
       containers:
       - name: coredns
         image: registry.ford.com/vcluster/upstream-coredns:1.8.4
