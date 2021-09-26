@@ -39,7 +39,7 @@ import (
 )
 
 const (
-	MasterRoleLabelKey       = "node-role.kubernetes.io/master"
+	MasterRoleLabelKey       = "node-role.kubernetes.io/worker"
 	ControlPlaneRoleLabelKey = "node-role.kubernetes.io/control-plane"
 	ETCDRoleLabelKey         = "node-role.kubernetes.io/etcd"
 )

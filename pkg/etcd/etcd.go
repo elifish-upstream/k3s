@@ -58,7 +58,7 @@ const (
 
 	maxBackupRetention = 5
 
-	MasterLabel       = "node-role.kubernetes.io/master"
+	MasterLabel       = "node-role.kubernetes.io/worker"
 	ControlPlaneLabel = "node-role.kubernetes.io/control-plane"
 	EtcdRoleLabel     = "node-role.kubernetes.io/etcd"
 )
